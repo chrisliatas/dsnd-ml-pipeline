@@ -1,0 +1,13 @@
+* text=auto eol=lf
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf
+
+*.py  whitespace=error
+
+*.ico binary
+*.jpg binary
+*.png binary
+*.zip binary
+*.mp3 binary
+
+Dockerfile.dev linguist-language=Dockerfile

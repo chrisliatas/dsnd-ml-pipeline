@@ -1,0 +1,27 @@
+node_modules
+npm-debug.log
+
+Dockerfile*
+docker-compose*
+.dockerignore
+
+.git
+.gitignore
+.github
+config
+docs
+
+README.md
+LICENSE
+
+# Development
+.devcontainer
+.vscod
+
+# Test related files
+.tox
+tests
+
+__pycache__
+env
+venv
