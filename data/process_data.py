@@ -59,7 +59,6 @@ def clean_data(df):
     # Rename the columns of `categories` using the new column names
     categories.columns = category_colnames
 
-    # == Dummy variables ==
     # Convert category values to just numbers 0 or 1
     for column in categories:
         # set each value to be the last character of the string

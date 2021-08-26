@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 """
-Script to run ML pipeline that trains a classifier, evaluates and saves the model
+Script to run ML pipeline for disaster related text messages,
+that trains a classifier, evaluates and saves the model
 """
 
 # import libraries
@@ -23,13 +24,11 @@ from nltk.corpus import stopwords
 
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.svm import LinearSVC
-
-# from sklearn.multioutput import MultiOutputClassifier
-# from sklearn.ensemble import RandomForestClassifier
+from sklearn.multioutput import MultiOutputClassifier
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.metrics import classification_report
-from sklearn.externals import joblib
+from joblib import dump
 
 
 def load_data(database_filepath):
@@ -86,6 +85,17 @@ def decontracted(phrase, tokens=True):
 
 
 def tokenize(text):
+    """
+    Split message strings into a sequence of tokens. Additionally,
+    transform the messages, replacing urls with placeholders, decontracting words,
+    removing stop words and lemmatizing messages.
+
+    Arguments:
+        text (str): Input string to be processed
+
+    Returns:
+        clean_tokens (list): A processed list with tokens (words).
+    """
     # Regular expression to detect a url within text
     url_regex = (
         "http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
@@ -118,19 +128,67 @@ def tokenize(text):
 
 
 def build_model():
+    """
+    Create a ML pipeline to sequentially apply a list of transforms and a final estimator.
+    Tune the hyper-parameters of the pipeline (estimator) for the best cross validation score,
+    with scikit-learn GridSearchCV that exhaustively considers all parameter combinations.
+
+    Returns:
+        grid_search instance with the supplied parameters ready to be fitted.
+    """
     pipeline = Pipeline(
         [
             ("vect", CountVectorizer(tokenizer=tokenize)),
             ("tfidf", TfidfTransformer()),
-            ("clf", LinearSVC(random_state=42, tol=1e-5)),
+            ("clf", MultiOutputClassifier(RandomForestClassifier(random_state=0))),
         ]
     )
 
-    return pipeline
+    # Dictionary with parameters names as keys and lists of parameter settings to try as values
+    parameters = {
+        "tfidf__use_idf": (True, False),
+        "clf__estimator__n_estimators": (10, 50, 100),
+        "clf__estimator__max_depth": (None, 3),
+    }
+
+    grid_search = GridSearchCV(pipeline, param_grid=parameters, verbose=3)
+
+    return grid_search
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    pass
+    """
+    Evaluate the model producing a text summary of the precision,
+    recall, F1 score for each class. Additionally, provide the accuracy
+    of the model and the best scoring combination of parameters from
+    the grid search.
+
+    Arguments:
+        model (sklearn estimator): A trained model, build using the build_model function
+        X_test (array-like): Input test data
+        Y_test (array-like): Target labels corresponding to the X_test data.
+        category_names:
+    """
+    Y_pred = model.predict(X_test)
+    # classification_report zero_division parameter is for sklearn version > 0.23.2
+    print(
+        classification_report(
+            Y_test, Y_pred, target_names=category_names, zero_division=0
+        )
+    )
+
+    # Get the mean accuracy on the given test data and labels,
+    # having the model fitted with the best scoring parameters from
+    # grid search.
+    accuracy = model.score(X_test, Y_test)
+    print(f"\nMean accuracy for model with best parameters: {accuracy:.3f}")
+
+    print(f"\nGrid search best score: {model.best_score_:.3f}")
+
+    print("\nBest parameters set:")
+    best_parameters = model.best_estimator_.get_params()
+    for k, v in best_parameters.items():
+        print(f"\n{k}, {v}")
 
 
 def save_model(model, model_filepath):
@@ -146,7 +204,7 @@ def save_model(model, model_filepath):
     # Ref: https://scikit-learn.org/stable/modules/model_persistence.html
     # Ref: https://stackoverflow.com/a/61920454/10074873
 
-    joblib.dump(model, model_filepath)
+    dump(model, model_filepath)
 
 
 def main():
