@@ -1,8 +1,19 @@
 # -*- coding: utf-8 -*-
 
 """
-Script to run ML pipeline for disaster related text messages,
-that trains a classifier, evaluates and saves the model
+Script to run ML workflow for disaster related text messages,
+that builds a pipelne to train a classifier, evaluates and saves the model.
+
+Requires:
+A databse file with processed text data, produced by `process_data.py`
+
+Usage:
+From the project's root directory run:
+`python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl`
+
+Arguments:
+    database_filepath: the filepath for the input database.
+    model_filepath: the filepath for the output pickle file containing the trained model.
 """
 
 # import libraries
@@ -15,9 +26,6 @@ import numpy as np
 from sqlalchemy import create_engine
 
 import nltk
-
-nltk.download(["punkt", "wordnet", "stopwords"])
-
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
@@ -29,6 +37,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.metrics import classification_report
 from joblib import dump
+
+nltk.download(["punkt", "wordnet", "stopwords"])
 
 
 def load_data(database_filepath):
@@ -147,8 +157,8 @@ def build_model():
     # Dictionary with parameters names as keys and lists of parameter settings to try as values
     parameters = {
         "tfidf__use_idf": (True, False),
-        "clf__estimator__n_estimators": (10, 50, 100),
-        "clf__estimator__max_depth": (None, 3),
+        "clf__estimator__n_estimators": (10, 100, 200),
+        "clf__estimator__max_depth": (None, 5),
     }
 
     grid_search = GridSearchCV(pipeline, param_grid=parameters, verbose=3)
@@ -181,7 +191,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
     # having the model fitted with the best scoring parameters from
     # grid search.
     accuracy = model.score(X_test, Y_test)
-    print(f"\nMean accuracy for model with best parameters: {accuracy:.3f}")
+    print(f"\nBest parameters model accuracy: {accuracy:.3f}")
 
     print(f"\nGrid search best score: {model.best_score_:.3f}")
 

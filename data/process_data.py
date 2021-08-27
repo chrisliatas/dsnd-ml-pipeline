@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
 
 """
-Script to run ETL pipeline that cleans data and stores it in database
+Script to run ETL pipeline that cleans data and stores it in database.
+
+Usage:
+From the project's root directory run:
+`python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/DisasterResponse.db`
+
+Arguments:
+    messages_filepath: file (.csv) with the disaster response messages
+    categories_filepath: file (.csv) with the disaster response categories
+    database_filepath: the location and name to save the output database.
 """
 
 # import libraries
