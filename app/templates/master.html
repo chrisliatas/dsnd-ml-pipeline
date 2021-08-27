@@ -7,70 +7,89 @@
 
     <title>Disasters</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://d14fo0winaifog.cloudfront.net/plotly-basic.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
 
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/">Disaster Response Project</a>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="/">Disaster Response Project</a>
+        <div class="collapse navbar-collapse" id="navbarsDefault">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="https://www.liatas.com/">Chris Liatas</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://github.com/chrisliatas">GitHub</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://www.linkedin.com/in/christosliatas/">Linkedin</a>
+            </li>
+          </ul>
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="https://www.udacity.com/">Made with Udacity</a></li>
-                <li><a href="https://github.com/chrisliatas">Contact</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+    </nav>
 
 
-<div class="jumbotron">
-    <div class="container">
-        <h1 class="text-center">Disaster Response Project</h1>
-        <p class="text-center">Analyzing message data for disaster response</p>
-        <hr />
+    <main role="main">
 
-        <div class="row">
-            <div class="col-lg-12 form-group-lg">
-                <form action="/go" method="get">
-                    <input type="text" class="form-control form-control-lg" name="query" placeholder="Enter a message to classify">
-                    <div class="col-lg-offset-5">
-                        <button type="submit" class="btn btn-lg btn-success">Classify Message</button>
+        <!-- Main jumbotron for a primary marketing message or call to action -->
+        <div class="jumbotron">
+          <div class="container">
+            <h1 class="display-3 text-center">Disaster Response Project</h1>
+            <p class="h3 my-5 font-weight-normal text-center">Analyzing message data for disaster response</p>
+
+            <form action="/go" method="get">
+                <div class="row">
+                    <input type="text" class="form-control form-control-lg mb-3" name="query" placeholder="Enter a message to classify">
+                    <div class="col mb-2 text-center">
+                        <button type="submit" class="btn btn-primary btn-lg">Classify Message</button>
                     </div>
-                </form>
+                </div>
+            </form>
+
+            {% block message %}
+            {% endblock %}
+          </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    {% block content %}
+                    <div class="page-header">
+                        <h1 class="display-4 text-center">Overview of Training Dataset</h1>
+                    </div>
+                    {% for id in ids %}
+                    <div id="{{id}}"></div>
+                    {% endfor %}
+                    {% endblock %}
+                </div>
             </div>
-        </div>
 
-        {% block message %}
-        {% endblock %}
-    </div>
-</div>
+            <hr>
+        </div> <!-- /container -->
 
-<div class="container">
-    {% block content %}
-        <div class="page-header">
-            <h1 class="text-center">Overview of Training Dataset</h1>
-        </div>
-    {% endblock %}
+    </main>
 
-    {% for id in ids %}
-        <div id="{{id}}"></div>
-    {% endfor %}
-</div>
+    <footer class="container text-center">
+        <p>&copy; <a href="https://www.liatas.com/">Chris Liatas</a> 2021 · <a href="https://www.udacity.com/">Made with Udacity</a></p>
+    </footer>
 
-<script type="text/javascript">
-    const graphs = {{graphJSON | safe}};
-    const ids = {{ids | safe}};
-    for(let i in graphs) {
-        Plotly.plot(ids[i], graphs[i].data, graphs[i].layout);
-    }
-</script>
+    <!-- Plotly -->
+    <script src="https://cdn.plot.ly/plotly-2.3.1.min.js"></script>
+    <!-- jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
 
+    <script type="text/javascript">
+        const graphs = {{graphJSON | safe}};
+        const ids = {{ids | safe}};
+        for(let i in graphs) {
+            Plotly.react(ids[i], graphs[i].data, graphs[i].layout);
+        };
+    </script>
 </body>
 </html>
