@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+Flask app entry point. Loads data from database file and a trained model
+from a .pkl file. Creates routes, builds Plotly graphs.
+"""
+# import libraries
 import json
 import plotly
 import pandas as pd
@@ -112,8 +118,8 @@ def go():
 
 
 def main():
-    app.run(host="0.0.0.0", port=3001, debug=True)
+    app.run(host="0.0.0.0", port=3001)
 
 
 if __name__ == "__main__":
-    # main()
+    main()

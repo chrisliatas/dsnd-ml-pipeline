@@ -2,10 +2,10 @@
 
 """
 Script to run ML workflow for disaster related text messages,
-that builds a pipelne to train a classifier, evaluates and saves the model.
+that builds a pipeline to train a classifier, evaluates and saves the model.
 
 Requires:
-A databse file with processed text data, produced by `process_data.py`
+A database file with processed text data, produced by `process_data.py`
 
 Usage:
 From the project's root directory run:
