@@ -32,6 +32,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          lfs: true
       - name: Heroku login credentials
         run: |
           cat > ~/.netrc <<EOF
@@ -46,7 +47,7 @@ jobs:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
       - name: Add Heroku remote
-        run: heroku git:remote --app $HEROKU_APP_NAME
+        run: git remote add heroku https://git.heroku.com/"$HEROKU_APP_NAME".git
         env:
           HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
       - name: Deploy to Heroku
