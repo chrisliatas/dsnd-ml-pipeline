@@ -8,7 +8,7 @@ The purpose of this project is to build a model for an API that classifies disas
 
 ### Presentation
 
-A live version of the dashboard is hosted on Heroku [**here**](https://dsnd-disaster-resp.herokuapp.com/).
+A live version of the web app is hosted on Heroku [**here**](https://dsnd-disaster-resp.herokuapp.com/).
 
 ## Environment
 
