@@ -1,8 +1,10 @@
-# Data Dashboard visualizing data from World Bank
+# Disaster Response ML Workflow Project
 
-This project is built using Flask, Bootstrap, Plotly and Pandas for data wrangling. Data is acuired through the World Bank [**API endpoints**](https://datahelpdesk.worldbank.org/knowledgebase/topics/125589-developer-information).
+The purpose of this project is to build a model for an API that classifies disaster messages. The idea is to create a machine learning pipeline to categorize these events so that these messages can be send to an appropriate disaster relief agency. Project includes a web app where an emergency worker can input a new message and get classification results in several categories. The web app also displays visualizations of the data. This project is built using Flask, Bootstrap, Plotly, NLTK to work with human language data and Pandas for data wrangling. Data is provided by [Figure Eight](https://www.figure-eight.com/).
 
-[<img src="img/appScreenshot.png" width="800" height="423" alt="app screenshot">](https://dsdn-cl-webapp-test.herokuapp.com/)
+[<img src="img/app_main_800x366.png" width="800" height="366" alt="app main">](https://dsdn-cl-webapp-test.herokuapp.com/)
+
+[<img src="img/app_classify_800x392.png" width="800" height="392" alt="app classification">](https://dsdn-cl-webapp-test.herokuapp.com/)
 
 ### Presentation
 
