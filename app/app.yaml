@@ -1,0 +1,24 @@
+runtime: python39
+
+instance_class: B4_1G
+
+basic_scaling:
+  max_instances: 2
+
+entrypoint: gunicorn -t 0 -b :$PORT -w 1 run:app
+# entrypoint: python3 run.py
+
+env_variables:
+  GCLOUD_APP_BUCKET: "dsnd-portfolio.appspot.com"
+
+handlers:
+  # This configures Google App Engine to serve the files in the app's static
+  # directory.
+- url: /static
+  static_dir: static
+
+  # This handler routes all requests not caught above to your main app. It is
+  # required when static routes are defined, but can be omitted (along with
+  # the entire handlers section) when there are no static files defined.
+- url: /.*
+  script: auto

@@ -155,15 +155,15 @@ def build_model():
     )
 
     # Dictionary with parameters names as keys and lists of parameter settings to try as values
-    parameters = {
-        "tfidf__use_idf": (True, False),
-        "clf__estimator__n_estimators": (10, 100, 200),
-        "clf__estimator__max_depth": (None, 5),
-    }
+    # parameters = {
+    #     "tfidf__use_idf": (True, False),
+    #     "clf__estimator__n_estimators": (10, 100, 200),
+    #     "clf__estimator__max_depth": (None, 5),
+    # }
 
-    grid_search = GridSearchCV(pipeline, param_grid=parameters, verbose=3)
+    # grid_search = GridSearchCV(pipeline, param_grid=parameters, verbose=3)
 
-    return grid_search
+    return pipeline
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
@@ -190,15 +190,15 @@ def evaluate_model(model, X_test, Y_test, category_names):
     # Get the mean accuracy on the given test data and labels,
     # having the model fitted with the best scoring parameters from
     # grid search.
-    accuracy = model.score(X_test, Y_test)
-    print(f"\nBest parameters model accuracy: {accuracy:.3f}")
+    # accuracy = model.score(X_test, Y_test)
+    # print(f"\nBest parameters model accuracy: {accuracy:.3f}")
 
-    print(f"\nGrid search best score: {model.best_score_:.3f}")
+    # print(f"\nGrid search best score: {model.best_score_:.3f}")
 
-    print("\nBest parameters set:")
-    best_parameters = model.best_estimator_.get_params()
-    for k, v in best_parameters.items():
-        print(f"\n{k}, {v}")
+    # print("\nBest parameters set:")
+    # best_parameters = model.best_estimator_.get_params()
+    # for k, v in best_parameters.items():
+    #     print(f"\n{k}, {v}")
 
 
 def save_model(model, model_filepath):

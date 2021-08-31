@@ -4,6 +4,14 @@ Flask app entry point. Loads data from database file and a trained model
 from a .pkl file. Creates routes, builds Plotly graphs.
 """
 # import libraries
+import os
+
+# Detecting application runtime environment
+if os.getenv("GAE_ENV", "").startswith("standard"):
+    gcloud = True
+else:
+    gcloud = False
+
 import json
 import plotly
 import pandas as pd
@@ -16,6 +24,10 @@ from flask import render_template, request, jsonify
 from plotly.graph_objs import Bar, Histogram
 import joblib
 from sqlalchemy import create_engine
+
+if gcloud:
+    # Imports the Google Cloud client library
+    from google.cloud import storage as gcs
 
 
 app = Flask(__name__)
@@ -33,12 +45,40 @@ def tokenize(text):
     return clean_tokens
 
 
-# load data
-engine = create_engine("sqlite:///../data/DisasterResponse.db")
-df = pd.read_sql_table("DisasterResponse", engine)
+def gcloud_data_model_dload():
+    """
+    Downloads database and pickle file blobs from the cloud bucket.
+    """
+    # Instantiates a client
+    gcs_client = gcs.Client()
+    bucket = gcs_client.bucket(
+        os.getenv("GCLOUD_APP_BUCKET", list(gcs_client.list_buckets())[0])
+    )
+    # Construct a client side representation of a blob.
+    folder = "appdata/"
+    blob_names = ("DisasterResponse.db", "classifier.pkl")
+    bucket_blobs = [bucket.blob(folder + blb) for blb in blob_names]
+    for blob, name in zip(bucket_blobs, blob_names):
+        blob.download_to_filename("/tmp/" + name)
 
+
+# Detecting application runtime environment
+if gcloud:
+    # Production in the standard environment
+    # get local copies of the database and pickle files.
+    gcloud_data_model_dload()
+    dbfile = "/tmp/DisasterResponse.db"
+    modelfile = "/tmp/classifier.pkl"
+else:
+    # Local execution.
+    dbfile = "../data/DisasterResponse.db"
+    modelfile = "../models/classifier.pkl"
+
+# load data
+engine = create_engine("sqlite:///" + dbfile)
+df = pd.read_sql_table("DisasterResponse", engine)
 # load model
-model = joblib.load("../models/classifier.pkl")
+model = joblib.load(modelfile)
 
 
 # index webpage displays cool visuals and receives user input text for model

@@ -50,8 +50,12 @@
 		"ms-python.python",
 		"visualstudioexptteam.vscodeintellicode",
 		"ms-python.vscode-pylance",
-		"esbenp.prettier-vscode",
 		"redhat.vscode-yaml",
+		"IBM.output-colorizer",
+		"googlecloudtools.cloudcode",
+		// "CoenraadS.bracket-pair-colorizer",
+		// "esbenp.prettier-vscode",
+		// "DavidAnson.vscode-markdownlint"
 		// "mongodb.mongodb-vscode"
 		// "ms-azure-devops.azure-pipelines",
 		// "ms-azuretools.vscode-docker"
