@@ -1,0 +1,35 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  annotations:
+    client.knative.dev/user-image: us-central1-docker.pkg.dev/dsnd-portfolio/disaster-response/disaster-response:f44b3192-31e8-446d-80c5-1644a2511fc8
+    run.googleapis.com/ingress: all
+    run.googleapis.com/ingress-status: all
+  labels:
+    cloud.googleapis.com/location: us-central1
+  name: disaster-response
+  namespace: '100800130056'
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: '100'
+        client.knative.dev/user-image: us-central1-docker.pkg.dev/dsnd-portfolio/disaster-response/disaster-response:f44b3192-31e8-446d-80c5-1644a2511fc8
+        run.googleapis.com/client-name: gcloud
+        run.googleapis.com/client-version: 355.0.0
+      name: disaster-response-00004-gur
+    spec:
+      containerConcurrency: 80
+      containers:
+      - image: us-central1-docker.pkg.dev/dsnd-portfolio/disaster-response/disaster-response:f44b3192-31e8-446d-80c5-1644a2511fc8
+        ports:
+        - containerPort: 8080
+          name: http1
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+      timeoutSeconds: 300
+  traffic:
+  - latestRevision: true
+    percent: 100
