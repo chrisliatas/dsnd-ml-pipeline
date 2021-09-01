@@ -2,9 +2,13 @@
 
 The purpose of this project is to build a model for an API that classifies disaster messages. The idea is to create a machine learning pipeline to categorize these events so that these messages can be send to an appropriate disaster relief agency. Project includes a web app where an emergency worker can input a new message and get classification results in several categories. The web app also displays visualizations of the data. This project is built using Flask, Bootstrap, Plotly, NLTK to work with human language data and Pandas for data wrangling. Data is provided by [Figure Eight](https://www.figure-eight.com/).
 
-<img src="img/app_main_800x366.png" width="800" height="366" alt="app main">
+[<img src="img/app_main_800x366.png" width="800" height="366" alt="app main">](https://disaster-response-jjwstdpyhq-uc.a.run.app)
 
-<img src="img/app_classify_800x392.png" width="800" height="392" alt="app classification">
+[<img src="img/app_classify_800x392.png" width="800" height="392" alt="app classification">](https://disaster-response-jjwstdpyhq-uc.a.run.app)
+
+### Presentation
+
+A live demo version of the app is hosted on Google Cloud Run [**here**](https://disaster-response-jjwstdpyhq-uc.a.run.app). You can test messages classification providing a message like "Help, I'm thirsty I need water!". :wink:
 
 ### Output - Results
 
@@ -81,7 +85,7 @@ The best performing model was not required for this project and since model fitt
 
 In the last step, our results are displayed in a Flask web [app](app/). The app provides a field where one can input a new message and get classification results in several categories. The web app also displays visualizations of the dataset. The visualizations are "Message categories frequency", "Message length frequency" and "Distribution of Message Genres". Flask app html templates have been created using [Bootstrap 4.6](https://getbootstrap.com/docs/4.6/getting-started/introduction/), [jQuery 3.5.1](https://code.jquery.com/jquery/) and javaScript [Plotly 2.3.1](https://plotly.com/javascript/getting-started/). Template is based on Bootstrap's official template [Jumbotron](https://getbootstrap.com/docs/4.6/examples/jumbotron/) and Udacity's provided starting code.
 
-<img src="img/app_viz_724x866.png" width="724" height="866" alt="app visualizations">
+[<img src="img/app_viz_724x866.png" width="724" height="866" alt="app visualizations">](https://disaster-response-jjwstdpyhq-uc.a.run.app)
 
 The dataset provided is **imbalanced** (ie some labels like water have few examples). In such cases, machine learning models will typically over-classify the larger classes due to their increased prior probability. This will provide instances belonging to the smaller classes that are typically misclassified more often than those belonging to the larger classes.
 
@@ -161,7 +165,15 @@ Directories and files structure:
 
 ## Deployment
 
-The project contains the files required to deploy the web app to Heroku. However, due to the large size of the trained model file (classifier.pkl) cannot be uploaded to a Heroku free tier git repo due to [limits](https://devcenter.heroku.com/articles/limits#git-repos) and lack of built-in Git LFS support.
+The project contains the files required to deploy the web app to [Google CLoud Run](https://cloud.google.com/run) (GCR). `cloudbuild.yaml` describes the steps for containarizing the app, pushing the image in the [Artifact Registry](https://cloud.google.com/artifact-registry) and finally deploying the image in GCR. For instructions on how to build configuration files and deploy to GCR please see [here](https://cloud.google.com/run/docs/quickstarts).
+
+**TL;DR**, using the [Google Cloud SDK](https://cloud.google.com/sdk), from the root directory of the repository run:
+
+```
+gcloud builds submit --config cloudbuild.yaml .
+```
+
+You can check the demo [**app running live here**](https://disaster-response-jjwstdpyhq-uc.a.run.app).
 
 ## Running the app locally
 

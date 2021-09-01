@@ -37,7 +37,7 @@ steps:
   - name: google/cloud-sdk
     args: ['gcloud', 'run', 'deploy', 'disaster-response',
            '--image=us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/disaster-response:$BUILD_ID',
-           '--region', 'us-central1', '--platform', 'managed',
+           '--region', 'us-central1', '--platform', 'managed', '--memory', '1Gi',
            '--allow-unauthenticated']
   # [END cloudbuild_python_deploy_yaml]
 
