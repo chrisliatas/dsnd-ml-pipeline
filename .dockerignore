@@ -16,7 +16,7 @@ LICENSE
 
 # Development
 .devcontainer
-.vscod
+.vscode
 
 # Test related files
 .tox

@@ -4,6 +4,7 @@ Flask app entry point. Loads data from database file and a trained model
 from a .pkl file. Creates routes, builds Plotly graphs.
 """
 # import libraries
+import os
 import json
 import plotly
 import pandas as pd
@@ -33,12 +34,21 @@ def tokenize(text):
     return clean_tokens
 
 
+# run.py
 # load data
-engine = create_engine("sqlite:///../data/DisasterResponse.db")
-df = pd.read_sql_table("DisasterResponse", engine)
+dbpath = os.path.abspath("data/DisasterResponse.db")
+engine = create_engine("sqlite:///" + dbpath)
+try:
+    df = pd.read_sql_table("DisasterResponse", engine)
+except:
+    assert os.path.exists(dbpath), "The db file doesn't exist"
 
 # load model
-model = joblib.load("../models/classifier.pkl")
+modelpath = os.path.abspath("models/classifier.pkl")
+try:
+    model = joblib.load(modelpath)
+except:
+    assert os.path.exists(modelpath), "The model file doesn't exist"
 
 
 # index webpage displays cool visuals and receives user input text for model
@@ -118,7 +128,7 @@ def go():
 
 
 def main():
-    app.run(host="0.0.0.0", port=3001)
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
 
 
 if __name__ == "__main__":

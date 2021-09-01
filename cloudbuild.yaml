@@ -1,0 +1,57 @@
+# Sample build submit:
+# gcloud builds submit --config=cloudbuild.yaml --substitutions=_LOCATION="us-east1",_REPOSITORY="my-repo",_IMAGE="my-image" .
+# or
+# gcloud builds submit --config=cloudbuild.yaml . (when substitutions is defined inside the cloudbuild.yaml)
+
+# [START cloudbuild_python_yaml]
+# [START cloudbuild_python_dependencies_yaml]
+steps:
+  # Install dependencies
+  # - name: python:3.9
+  #   entrypoint: pip
+  #   args: ["install", "-r", "requirements.txt", "--user"]
+# [END cloudbuild_python_dependencies_yaml]
+
+  # [START cloudbuild_python_tests_yaml]
+  # Run unit tests
+  # - name: python
+  #   entrypoint: python
+  #   args: ["-m", "pytest", "--junitxml=${SHORT_SHA}_test_log.xml"]
+  # [END cloudbuild_python_tests_yaml]
+
+  # [START cloudbuild_python_image_yaml]
+  # Docker Build
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-f', 'Dockerfile.prod', '-t',
+           'us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/disaster-response:$BUILD_ID', '.']
+  # [END cloudbuild_python_image_yaml]
+
+  # [START cloudbuild_python_push_yaml]
+  # Docker push to Google Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push',  'us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/disaster-response:$BUILD_ID']
+  # [END cloudbuild_python_push_yaml]
+
+  # [START cloudbuild_python_deploy_yaml]
+  # Deploy to Cloud Run
+  - name: google/cloud-sdk
+    args: ['gcloud', 'run', 'deploy', 'disaster-response',
+           '--image=us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/disaster-response:$BUILD_ID',
+           '--region', 'us-central1', '--platform', 'managed',
+           '--allow-unauthenticated']
+  # [END cloudbuild_python_deploy_yaml]
+
+# [START cloudbuild_python_logs_yaml]
+# Save test logs to Google Cloud Storage
+# artifacts:
+#   objects:
+#     location: gs://$_BUCKET_NAME/
+#     paths:
+#       - ${SHORT_SHA}_test_log.xml
+# [END cloudbuild_python_logs_yaml]
+# Store images in Google Artifact Registry
+substitutions:
+    _REPO_NAME: disaster-response
+images:
+  - us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/disaster-response:$BUILD_ID
+# [END cloudbuild_python_yaml]
