@@ -21,7 +21,7 @@ google-crc32c==1.1.2
 google-resumable-media==2.0.0
 googleapis-common-protos==1.53.0
 greenlet==1.1.1
-gunicorn==22.0.0
+gunicorn==23.0.0
 idna==3.7
 ipykernel==6.2.0
 ipython==8.10.0
