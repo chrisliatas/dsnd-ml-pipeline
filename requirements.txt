@@ -11,7 +11,7 @@ defusedxml==0.7.1
 entrypoints==0.3
 Flask==2.3.2
 greenlet==1.1.1
-gunicorn==22.0.0
+gunicorn==23.0.0
 ipykernel==6.2.0
 ipython==8.10.0
 ipython-genutils==0.2.0
